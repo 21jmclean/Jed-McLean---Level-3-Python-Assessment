@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import messagebox
+
 debtors = []
 page = 1
 BUTTON_BG_COLOUR = "yellow"
@@ -9,9 +11,9 @@ class Debt:
         self.amount = amount
         self.date = date
         self.reason = reason
-    
+
     def show_info(self):
-        return f"Name: {self.name} \nAmount: {self.amount} \nDate: {self.date} \nReason: {self.reason}\n"
+        return f"Name: {self.name} Amount: ${self.amount} Date: {self.date} Reason: {self.reason}"
     
 class GUI:
     def __init__(self, parent):
@@ -72,12 +74,15 @@ class GUI:
             self.current_frame.pack()
 
     def confirm_new_data(self, name, amount, date, reason):
-        debtor = Debt(name, amount, date, reason)
-        debtors.append(debtor)
+        if name == "" or amount == 0 or date == "" or reason == "":
+            messagebox.showerror("Error", "Please fill out all fields")
+        else:
+            debtor = Debt(name, amount, date, reason)
+            debtors.append(debtor)
 
     def show_all_data(self):
         for i, debtor in enumerate(debtors):
-            label = Label(self.viewing_frame, text=debtor.show_info())
+            label = Label(self.viewing_frame, text=debtor.show_info(), font="Arial 10")
             label.grid(row=i+1, column=0)
 
 if __name__ == "__main__":
