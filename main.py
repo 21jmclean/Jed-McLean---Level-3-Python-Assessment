@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 
 debtors = []
-page = 1
+labels = []
+buttons = []
 BUTTON_BG_COLOUR = "yellow"
 
 class Debt:
@@ -87,12 +88,26 @@ class GUI:
 
 
     def show_all_data(self):
+        for widget in self.viewing_frame.winfo_children():
+            widget.grid_forget()
+        
+        t1 = Label(self.viewing_frame, text="Debtors:", font="Arial")
+        t1.grid(row=1, column=0)
         for i, debtor in enumerate(debtors):
             label = Label(self.viewing_frame, text=debtor.show_info(), font="Arial 10")
             label.grid(row=i+1, column=0)
+            labels.append(label)
 
-            resolve_button = Button(self.viewing_frame, text="Resolve", bg=BUTTON_BG_COLOUR)
+            resolve_button = Button(self.viewing_frame, text="Resolve", bg=BUTTON_BG_COLOUR, command=lambda idx=i:self.resolve_debt(idx))
             resolve_button.grid(row=i+1, column=2)
+            buttons.append(resolve_button)
+
+    def resolve_debt(self, index):
+        debtors.pop(index)
+        labels.pop(index)
+        buttons.pop(index)
+        self.show_all_data()
+
 
 if __name__ == "__main__":
     root = Tk()
