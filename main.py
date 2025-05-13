@@ -19,7 +19,7 @@ class GUI:
     def __init__(self, parent):
         self.parent = parent
         name = StringVar()
-        amount = IntVar()
+        amount = StringVar()
         date = StringVar()
         reason = StringVar()
 
@@ -55,6 +55,7 @@ class GUI:
         reason_label.grid(row=5, column=0)
         reason_entry.grid(row=5, column = 1)
 
+
         confirm_button = Button(self.adding_frame, text = "Confirm", width=30, background=BUTTON_BG_COLOUR, command=lambda:self.confirm_new_data(name.get(), amount.get(), date.get(), reason.get()))
         confirm_button.grid(row=6, column = 0, columnspan=2)
 
@@ -74,16 +75,24 @@ class GUI:
             self.current_frame.pack()
 
     def confirm_new_data(self, name, amount, date, reason):
-        if name == "" or amount == 0 or date == "" or reason == "":
-            messagebox.showerror("Error", "Please fill out all fields")
-        else:
-            debtor = Debt(name, amount, date, reason)
-            debtors.append(debtor)
+        try:
+            amount = int(amount)
+            if name == "" or amount <= 0 or date == "" or reason == "":
+                messagebox.showerror("Error", "Please fill out all fields")
+            else:
+                debtor = Debt(name, amount, date, reason)
+                debtors.append(debtor)
+        except ValueError:
+            messagebox.showerror("Error", "Enter a valid loan amount")
+
 
     def show_all_data(self):
         for i, debtor in enumerate(debtors):
             label = Label(self.viewing_frame, text=debtor.show_info(), font="Arial 10")
             label.grid(row=i+1, column=0)
+
+            resolve_button = Button(self.viewing_frame, text="Resolve", bg=BUTTON_BG_COLOUR)
+            resolve_button.grid(row=i+1, column=2)
 
 if __name__ == "__main__":
     root = Tk()
